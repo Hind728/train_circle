@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="train_world">
+    <physics name="1ms" type="ignored"><max_step_size>0.001</max_step_size><real_time_factor>1.0</real_time_factor></physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <light type="directional" name="sun"><cast_shadows>true</cast_shadows><pose>0 0 10 0 0 0</pose><diffuse>1 1 1 1</diffuse><specular>0.5 0.5 0.5 1</specular><direction>-0.5 0.1 -0.9</direction></light>
+    <model name="ground"><static>true</static><link name="link">
+      <collision name="collision"><geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry></collision>
+      <visual name="visual"><geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry><material><ambient>0.2 0.6 0.2 1</ambient><diffuse>0.2 0.6 0.2 1</diffuse></material></visual>
+    </link></model>
+    <model name="center_block"><static>true</static><pose>0 0 1 0 0 0</pose><link name="link">
+      <visual name="visual"><geometry><box><size>3 3 2</size></box></geometry><material><ambient>0.6 0.3 0.1 1</ambient><diffuse>0.6 0.3 0.1 1</diffuse></material></visual>
+      <collision name="collision"><geometry><box><size>3 3 2</size></box></geometry></collision>
+    </link></model>
+    <model name="train">
+      <pose>0 0 0 0 0 0</pose>
+      <link name="locomotive">
+        <pose>7.0000 -0.0000 0.3 0 0 1.5708</pose>
+        <inertial><mass>5.0</mass><inertia><ixx>0.5</ixx><ixy>0</ixy><ixz>0</ixz><iyy>1.0</iyy><iyz>0</iyz><izz>1.0</izz></inertia></inertial>
+        <collision name="col_locomotive"><geometry><box><size>1.4 0.65 0.45</size></box></geometry></collision>
+        <visual name="vis_locomotive"><geometry><box><size>1.4 0.65 0.45</size></box></geometry><material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material></visual>
+      </link>
+      <link name="wagon1">
+        <pose>6.8179 -1.5861 0.3 0 0 1.3422</pose>
+        <inertial><mass>5.0</mass><inertia><ixx>0.5</ixx><ixy>0</ixy><ixz>0</ixz><iyy>1.0</iyy><iyz>0</iyz><izz>1.0</izz></inertia></inertial>
+        <collision name="col_wagon1"><geometry><box><size>1.4 0.65 0.45</size></box></geometry></collision>
+        <visual name="vis_wagon1"><geometry><box><size>1.4 0.65 0.45</size></box></geometry><material><ambient>0.1 0.2 0.85 1</ambient><diffuse>0.1 0.2 0.85 1</diffuse></material></visual>
+      </link>
+      <link name="wagon2">
+        <pose>6.2812 -3.0897 0.3 0 0 1.1137</pose>
+        <inertial><mass>5.0</mass><inertia><ixx>0.5</ixx><ixy>0</ixy><ixz>0</ixz><iyy>1.0</iyy><iyz>0</iyz><izz>1.0</izz></inertia></inertial>
+        <collision name="col_wagon2"><geometry><box><size>1.4 0.65 0.45</size></box></geometry></collision>
+        <visual name="vis_wagon2"><geometry><box><size>1.4 0.65 0.45</size></box></geometry><material><ambient>0.1 0.7 0.15 1</ambient><diffuse>0.1 0.7 0.15 1</diffuse></material></visual>
+      </link>
+      <link name="wagon3">
+        <pose>5.4178 -4.4326 0.3 0 0 0.8851</pose>
+        <inertial><mass>5.0</mass><inertia><ixx>0.5</ixx><ixy>0</ixy><ixz>0</ixz><iyy>1.0</iyy><iyz>0</iyz><izz>1.0</izz></inertia></inertial>
+        <collision name="col_wagon3"><geometry><box><size>1.4 0.65 0.45</size></box></geometry></collision>
+        <visual name="vis_wagon3"><geometry><box><size>1.4 0.65 0.45</size></box></geometry><material><ambient>0.9 0.75 0.05 1</ambient><diffuse>0.9 0.75 0.05 1</diffuse></material></visual>
+      </link>
+      <joint name="joint_locomotive_wagon1" type="fixed"><parent>locomotive</parent><child>wagon1</child></joint>
+      <joint name="joint_wagon1_wagon2" type="fixed"><parent>wagon1</parent><child>wagon2</child></joint>
+      <joint name="joint_wagon2_wagon3" type="fixed"><parent>wagon2</parent><child>wagon3</child></joint>
+      <plugin filename="gz-sim-trajectory-follower-system" name="gz::sim::systems::TrajectoryFollower">
+        <link_name>locomotive</link_name>
+        <loop>true</loop>
+        <force>800</force>
+        <torque>800</torque>
+        <range_accuracy>0.3</range_accuracy>
+        <bearing_accuracy>0.05</bearing_accuracy>
+        <waypoints>
+          <waypoint>7.0000 0.0000</waypoint>
+          <waypoint>6.9784 0.5492</waypoint>
+          <waypoint>6.9138 1.0950</waypoint>
+          <waypoint>6.8066 1.6341</waypoint>
+          <waypoint>6.6574 2.1631</waypoint>
+          <waypoint>6.4672 2.6788</waypoint>
+          <waypoint>6.2370 3.1779</waypoint>
+          <waypoint>5.9685 3.6575</waypoint>
+          <waypoint>5.6631 4.1145</waypoint>
+          <waypoint>5.3228 4.5461</waypoint>
+          <waypoint>4.9497 4.9497</waypoint>
+          <waypoint>4.5461 5.3228</waypoint>
+          <waypoint>4.1145 5.6631</waypoint>
+          <waypoint>3.6575 5.9685</waypoint>
+          <waypoint>3.1779 6.2370</waypoint>
+          <waypoint>2.6788 6.4672</waypoint>
+          <waypoint>2.1631 6.6574</waypoint>
+          <waypoint>1.6341 6.8066</waypoint>
+          <waypoint>1.0950 6.9138</waypoint>
+          <waypoint>0.5492 6.9784</waypoint>
+          <waypoint>0.0000 7.0000</waypoint>
+          <waypoint>-0.5492 6.9784</waypoint>
+          <waypoint>-1.0950 6.9138</waypoint>
+          <waypoint>-1.6341 6.8066</waypoint>
+          <waypoint>-2.1631 6.6574</waypoint>
+          <waypoint>-2.6788 6.4672</waypoint>
+          <waypoint>-3.1779 6.2370</waypoint>
+          <waypoint>-3.6575 5.9685</waypoint>
+          <waypoint>-4.1145 5.6631</waypoint>
+          <waypoint>-4.5461 5.3228</waypoint>
+          <waypoint>-4.9497 4.9497</waypoint>
+          <waypoint>-5.3228 4.5461</waypoint>
+          <waypoint>-5.6631 4.1145</waypoint>
+          <waypoint>-5.9685 3.6575</waypoint>
+          <waypoint>-6.2370 3.1779</waypoint>
+          <waypoint>-6.4672 2.6788</waypoint>
+          <waypoint>-6.6574 2.1631</waypoint>
+          <waypoint>-6.8066 1.6341</waypoint>
+          <waypoint>-6.9138 1.0950</waypoint>
+          <waypoint>-6.9784 0.5492</waypoint>
+          <waypoint>-7.0000 0.0000</waypoint>
+          <waypoint>-6.9784 -0.5492</waypoint>
+          <waypoint>-6.9138 -1.0950</waypoint>
+          <waypoint>-6.8066 -1.6341</waypoint>
+          <waypoint>-6.6574 -2.1631</waypoint>
+          <waypoint>-6.4672 -2.6788</waypoint>
+          <waypoint>-6.2370 -3.1779</waypoint>
+          <waypoint>-5.9685 -3.6575</waypoint>
+          <waypoint>-5.6631 -4.1145</waypoint>
+          <waypoint>-5.3228 -4.5461</waypoint>
+          <waypoint>-4.9497 -4.9497</waypoint>
+          <waypoint>-4.5461 -5.3228</waypoint>
+          <waypoint>-4.1145 -5.6631</waypoint>
+          <waypoint>-3.6575 -5.9685</waypoint>
+          <waypoint>-3.1779 -6.2370</waypoint>
+          <waypoint>-2.6788 -6.4672</waypoint>
+          <waypoint>-2.1631 -6.6574</waypoint>
+          <waypoint>-1.6341 -6.8066</waypoint>
+          <waypoint>-1.0950 -6.9138</waypoint>
+          <waypoint>-0.5492 -6.9784</waypoint>
+          <waypoint>-0.0000 -7.0000</waypoint>
+          <waypoint>0.5492 -6.9784</waypoint>
+          <waypoint>1.0950 -6.9138</waypoint>
+          <waypoint>1.6341 -6.8066</waypoint>
+          <waypoint>2.1631 -6.6574</waypoint>
+          <waypoint>2.6788 -6.4672</waypoint>
+          <waypoint>3.1779 -6.2370</waypoint>
+          <waypoint>3.6575 -5.9685</waypoint>
+          <waypoint>4.1145 -5.6631</waypoint>
+          <waypoint>4.5461 -5.3228</waypoint>
+          <waypoint>4.9497 -4.9497</waypoint>
+          <waypoint>5.3228 -4.5461</waypoint>
+          <waypoint>5.6631 -4.1145</waypoint>
+          <waypoint>5.9685 -3.6575</waypoint>
+          <waypoint>6.2370 -3.1779</waypoint>
+          <waypoint>6.4672 -2.6788</waypoint>
+          <waypoint>6.6574 -2.1631</waypoint>
+          <waypoint>6.8066 -1.6341</waypoint>
+          <waypoint>6.9138 -1.0950</waypoint>
+          <waypoint>6.9784 -0.5492</waypoint>
+        </waypoints>
+      </plugin>
+    </model>
+  </world>
+</sdf>
